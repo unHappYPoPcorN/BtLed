@@ -38,5 +38,5 @@ void addAlarm(String aStr);
 void removeAlarm(String rStr);
 void printAlarm();
 void checkAlarm();
-
+void turnAlarm();
 #endif

@@ -18,9 +18,10 @@ typedef struct
 extern RGB rgb;
 extern float vo;
 
-void changeColor();
+void changeColor(RGB cRgb, float cVo);
 void changeStrColor(String cStr);
 RGB changeRGB(String hx);
+void changeVolume(float cVol);
 void setColor(int red, int green, int blue);
 
 #endif

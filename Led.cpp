@@ -1,18 +1,18 @@
 #include "Led.h"
 
-RGB rgb = {0, 0, 0};
-float vo = 100;
+RGB curRgb = {0, 0, 0};
 
-void changeColor()
+void changeColor(RGB cRgb, float cVo)
 {
-    setColor(int(rgb.r * vo / 100), int(rgb.g * vo / 100), int(rgb.b * vo / 100));
-    Serial.println((String)rgb.r + ' ' + rgb.g + ' ' + rgb.b);
+    curRgb = cRgb;
+    // Serial.println((String)(cRgb.r));
+    setColor(int(cRgb.r * cVo / 100), int(cRgb.g * cVo / 100), int(cRgb.b * cVo / 100));
 }
 
 void changeStrColor(String cStr)
 {
-    rgb = changeRGB(cStr.substring(2, cStr.length()));
-    changeColor();
+    RGB sRgb = changeRGB(cStr.substring(2, cStr.length()));
+    changeColor(sRgb, 100);
 }
 
 RGB changeRGB(String hx)
@@ -22,8 +22,15 @@ RGB changeRGB(String hx)
     rgbh.r = numb >> 16;
     rgbh.g = numb >> 8 & 0xFF;
     rgbh.b = numb & 0xFF;
+    curRgb = rgbh;
 
     return rgbh;
+}
+
+void changeVolume(float cVol)
+{
+    Serial.println(cVol);
+    changeColor(curRgb, cVol);
 }
 
 void setColor(int red, int green, int blue)

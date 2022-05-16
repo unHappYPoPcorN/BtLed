@@ -1,5 +1,6 @@
 #include "Alarm.h"
 #include "Led.h"
+#include "math.h"
 
 bool almOn = false;
 bool hasSpeed = false;
@@ -93,6 +94,7 @@ void resetAlarm()
         Serial.println("File write failed");
     }
     fl.close();
+    almOn = false;
     Serial.println(readFile());
 }
 
@@ -142,29 +144,51 @@ void checkAlarm()
     {
         // Serial.println(almList.get(0).hr * 60 + almList.get(0).mn);
     }
-    Serial.println(nown);
-
-    for (int i = 0; i < almList.size(); i++)
+    // Serial.println(nown);
+    if (!almOn)
     {
-        wMn = almList.get(i).hr * 60 + almList.get(i).mn;
-        if (almList.get(i).on == 1)
+        for (int i = 0; i < almList.size(); i++)
         {
-            if (wMn - almList.get(i).speed < 0)
-                waMn = wMn + 1440 - almList.get(i).speed;
-            else
-                waMn = wMn - almList.get(i).speed;
-        }
-        if (waMn == nown)
-        {
-            Serial.println("wake up!");
-            almOn = true;
+            wMn = almList.get(i).hr * 60 + almList.get(i).mn;
             if (almList.get(i).on == 1)
             {
-                hasSpeed = true;
-                alSpeed = almList.get(i).speed;
+                if (wMn - almList.get(i).speed < 0)
+                    waMn = wMn + 1440 - almList.get(i).speed;
+                else
+                    waMn = wMn - almList.get(i).speed;
             }
-            else
-                hasSpeed = false;
+            if (waMn == nown)
+            {
+                Serial.println("wake up!");
+                alTime = 0;
+                almOn = true;
+                if (almList.get(i).on == 1)
+                {
+                    hasSpeed = true;
+                    alSpeed = almList.get(i).speed * 60;
+                }
+                else
+                {
+                    hasSpeed = false;
+                    alSpeed = 60;
+                }
+            }
+        }
+    }
+}
+
+void turnAlarm()
+{
+    if (almOn)
+    {
+        alTime++;
+        // Serial.println(alTime);
+        if (alTime == alSpeed)
+            almOn = false;
+        else
+        {
+            float tVo = pow((float)alTime / (float)alSpeed, 2) * 100;
+            changeVolume(tVo);
         }
     }
 }

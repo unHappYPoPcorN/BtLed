@@ -98,6 +98,7 @@ void loop()
   {
     timeVal = millis();
     checkAlarm();
+    turnAlarm();
     // 카운트 동작;
   }
 }
@@ -141,8 +142,8 @@ void getStr(String strn)
   }
   else
   {
-    vo = str2.toInt();
-    setColor(int(rgb.r * vo / 100), int(rgb.g * vo / 100), int(rgb.b * vo / 100));
+    float cVol = str2.toFloat();
+    changeVolume(cVol);
   }
 }
 
